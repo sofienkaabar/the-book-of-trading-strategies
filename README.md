@@ -1,2 +1,3 @@
-# the-book-of-more-back-tests
-Source Codes for the Book of More Back-tests
+👋 Hi, I’m @sofienkaabar
+👀 This will be the Book of Trading Strategies' repository
+📫 You can reach me on LinkedIn if you wish to buy the PDF version
