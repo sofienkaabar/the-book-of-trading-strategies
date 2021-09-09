@@ -35,7 +35,7 @@ now = datetime.datetime.now()
 
 def asset_list(asset_set):
    
-    if asset_set == 'FX':
+    if asset_set == 1:
         
         assets = ['EURUSD', 'USDCHF', 'GBPUSD', 'AUDUSD', 'NZDUSD',
                   'USDCAD', 'EURCAD', 'EURGBP', 'EURCHF', 'AUDCAD',
