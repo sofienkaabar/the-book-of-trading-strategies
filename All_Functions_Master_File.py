@@ -4151,13 +4151,3 @@ def aroon(Data, period, close, where):
     Data = deleter(Data, 5, 4)
     
     return Data    
-
-
-
-
-
-
-
-
-
-
