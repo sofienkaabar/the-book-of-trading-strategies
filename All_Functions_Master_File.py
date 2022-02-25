@@ -279,6 +279,26 @@ def volatility(Data, lookback, what, where):
      
     return Data
 
+def normalizer(data, lookback, close, where):
+            
+    data = adder(data, 1)
+        
+    for i in range(len(data)):
+            
+        try:
+            
+            data[i, where] = (data[i, close] - min(data[i - lookback + 1:i + 1, close])) / (max(data[i - lookback + 1:i + 1, close]) - min(data[i - lookback + 1:i + 1, close]))
+            
+        except ValueError:
+            
+            pass
+        
+    data[:, where] = data[:, where] * 100  
+            
+    data = deleter(data, lookback)
+
+    return data
+   
 def ma(Data, lookback, close, where): 
     
     Data = adder(Data, 1)
