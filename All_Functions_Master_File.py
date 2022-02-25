@@ -2227,7 +2227,7 @@ def fibonacci_retracement(Data, retracement, indicator, upper_barrier, lower_bar
                 if Data[a, indicator] > lower_barrier and Data[a - 1, indicator] < lower_barrier:
                     
                     Data[a - 1, where + 2] = -1 # Marking the bottom
-                    Data[a - 1, where + 3] = (Data[i - 1, r] - Data[a - 1, indicator])
+                    Data[a - 1, where + 3] = (Data[i - 1, indicator] - Data[a - 1, indicator])
                     Data[a - 1, where + 3] = Data[a - 1, indicator] + (Data[a - 1, where + 3] * retracement) 
                     break
                 
@@ -2917,7 +2917,7 @@ def adaptive_rsi(Data, lookback):
     
     return Data
 
-def hull_rsi(Data, close, where):
+def hull_rsi(Data, lookback, close, where):
 
     # Taking price differences
     Data = adder(Data, 3)
@@ -3746,7 +3746,7 @@ def psychological_levels_scanner(Data, trend, signal, buy, sell):
 
     return Data
  
-def augmented_rsi(Data, lookback, close, where, width = 1, genre = 'Smoothed'):
+def augmented_rsi(Data, lookback, high, low, close, where, width = 1, genre = 'Smoothed'):
     
     Data = adder(Data, 5)
     
@@ -4151,7 +4151,6 @@ def aroon(Data, period, close, where):
     Data = deleter(Data, 5, 4)
     
     return Data    
-
 
 
 
