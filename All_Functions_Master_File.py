@@ -1472,36 +1472,6 @@ def stationary_extreme_indicator(Data, lag, high, low, where, cutoff):
             
     return Data
 
-def democratic_indicator(Data, beginning_ma, final_ma, step, what, where):
-    
-    for i in range(beginning_ma, final_ma, step):
-        Data = adder(Data, 1)
-        Data = ma(Data, i, what, where)
-        where = where + 1
-        
-    Data = jump(Data, i)
-    
-    Data = rounding(Data, 4)
-    Data = adder(Data, 1)
-    
-    for i in range(len(Data)):
-        
-        transposed = np.transpose(Data[i, 4:43])
-        transposed = list(transposed)
-        mode_value = np.array(stats.multimode(transposed))
-        
-        if len(mode_value) > 1:
-            mode_value = 0
-        
-        Data[i, 44] = np.array(mode_value)
-           
-    for i in range(len(Data)):
-        
-        if Data[i, -1] == 0:
-            Data[i, -1] = Data[i - 1, -1]
-      
-    return Data   
-
 def fib(n):
    if n == 1:
       return 1
@@ -2569,7 +2539,7 @@ def pure_pupil_bands(Data, boll_lookback, standard_distance, what, high, low, wh
     # Calculating means
     ma(Data, boll_lookback, what, where)
 
-    Data = pure_pupil(Data, lookback, high, low, where + 1)
+    Data = pure_pupil(Data, boll_lookback, high, low, where + 1)
     
     Data[:, where + 2] = Data[:, where] + (standard_distance * Data[:, where + 1])
     Data[:, where + 3] = Data[:, where] - (standard_distance * Data[:, where + 1])
@@ -4151,3 +4121,13 @@ def aroon(Data, period, close, where):
     Data = deleter(Data, 5, 4)
     
     return Data    
+
+
+
+
+
+
+
+
+
+
