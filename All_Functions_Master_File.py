@@ -17,19 +17,28 @@ expected_cost    = 0.00000 # 1/10 of a Pip
 sigchart         = False
 signal_quality_period = 3
 
-frame_MIN1 = mt5.TIMEFRAME_M1
-frame_M5   = mt5.TIMEFRAME_M5
-frame_M10  = mt5.TIMEFRAME_M10
-frame_M15  = mt5.TIMEFRAME_M15
-frame_M30  = mt5.TIMEFRAME_M30
-frame_H1   = mt5.TIMEFRAME_H1
-frame_H2   = mt5.TIMEFRAME_H2
-frame_H3   = mt5.TIMEFRAME_H3
-frame_H4   = mt5.TIMEFRAME_H4
-frame_H6   = mt5.TIMEFRAME_H6
-frame_D1   = mt5.TIMEFRAME_D1
-frame_W1   = mt5.TIMEFRAME_W1
-frame_M1   = mt5.TIMEFRAME_MN1
+frameDict = {  
+    'M1'  : [mt5.TIMEFRAME_M1,          1],
+    'M2'  : [mt5.TIMEFRAME_M2,          2],
+    'M3'  : [mt5.TIMEFRAME_M3,          3],
+    'M4'  : [mt5.TIMEFRAME_M4,          4],
+    'M5'  : [mt5.TIMEFRAME_M5,          5],
+    'M6'  : [mt5.TIMEFRAME_M6,          6],
+    'M10' : [mt5.TIMEFRAME_M10,        10],
+    'M12' : [mt5.TIMEFRAME_M12,        12],
+    'M15' : [mt5.TIMEFRAME_M15,        15],
+    'M30' : [mt5.TIMEFRAME_M30,        30],
+    'H1'  : [mt5.TIMEFRAME_H1,         60],
+    'H2'  : [mt5.TIMEFRAME_H2,     2 * 60],
+    'H3'  : [mt5.TIMEFRAME_H3,     3 * 60],
+    'H4'  : [mt5.TIMEFRAME_H4,     4 * 60],
+    'H6'  : [mt5.TIMEFRAME_H6,     6 * 60],
+    'H8'  : [mt5.TIMEFRAME_H8,     8 * 60],
+    'H12' : [mt5.TIMEFRAME_H12,   12 * 60],
+    'D1'  : [mt5.TIMEFRAME_D1,       1440],
+    'W1'  : [mt5.TIMEFRAME_W1,   7 * 1440],
+    'MN1' : [mt5.TIMEFRAME_MN1, 30 * 1440]
+}
 
 now = datetime.datetime.now()
 
@@ -53,73 +62,18 @@ def asset_list(asset_set):
     return assets
 
 def mass_import(asset, horizon):
-    
-    if horizon == 'MN1':
-        data = get_quotes(frame_MIN1, 2021, 7, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)    
-    
-    if horizon == 'M5':
-        data = get_quotes(frame_M5, 2021, 6, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)
 
-    if horizon == 'M10':
-        data = get_quotes(frame_M10, 2020, 8, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)
-        
-    if horizon == 'M15':
-        data = get_quotes(frame_M15, 2019, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)
-        
-    if horizon == 'M30':
-        data = get_quotes(frame_M30, 2016, 8, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-        
-    if horizon == 'H1':
-        data = get_quotes(frame_H1, 2020, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-        
-    if horizon == 'H2':
-        data = get_quotes(frame_H2, 2010, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-        
-    if horizon == 'H3':
-        data = get_quotes(frame_H3, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-        
-    if horizon == 'H4':
-        data = get_quotes(frame_H4, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-        
-    if horizon == 'H6':
-        data = get_quotes(frame_H6, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)            
-        
-    if horizon == 'D1':
-        data = get_quotes(frame_D1, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-           
-    if horizon == 'W1':
-        data = get_quotes(frame_W1, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-         
-    if horizon == 'M1':
-        data = get_quotes(frame_M1, 2000, 1, 1, asset = assets[asset])
-        data = data.iloc[:, 1:5].values
-        data = data.round(decimals = 5)        
-
+    frameVal = frameDict.get(horizon)
+    #Calculate 50000 bars 
+    startSampleDate = datetime.datetime.now() - datetime.timedelta(minutes = 50001 * frameVal[1])
+    data = get_quotes(frameVal[0], startSampleDate.year, startSampleDate.month, startSampleDate.day, asset = assets[asset])
+    data = data.iloc[:, 1:5].values
+    data = data.round(decimals = 5)    
+    # Diagnostics 
+    #print(assets[asset] + " " + horizon + " got data len = " + str(len(data)))
+    #print("Start date: " + startSampleDate.strftime("%m/%d/%Y"))
     return data 
+    
 
 def get_quotes(time_frame, year = 2005, month = 1, day = 1, asset = "EURUSD"):
         
@@ -131,7 +85,7 @@ def get_quotes(time_frame, year = 2005, month = 1, day = 1, asset = "EURUSD"):
     timezone = pytz.timezone("Europe/Paris")
     
     utc_from = datetime.datetime(year, month, day, tzinfo = timezone)
-    utc_to = datetime.datetime(now.year, now.month, now.day + 1, tzinfo = timezone)
+    utc_to = datetime.datetime.now(timezone) + datetime.timedelta(days=1)
     
     rates = mt5.copy_rates_range(asset, time_frame, utc_from, utc_to)
     
